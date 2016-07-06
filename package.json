@@ -1,0 +1,16 @@
+{
+  "name": "beerjs-pizzas",
+  "version": "0.0.1",
+  "description": "calcula la cantidad de pizzas necesarias para una empresa host de una edición de  BeerJS Santiago",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jorge Epuñan | @csslab",
+  "license": "MIT",
+  "dependencies": {
+    "how-many-pizza": "^1.1.1",
+    "node-static": "^0.7.7"
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <title>Calculadora de Pizzas / Asistentes | BeerJS Santiago</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/mutable-tools/MutaGrid/master/demo/mutagrid/dist/12/mutagrid.min.css" />
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700,900" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+  <main class="container">
+    <div class="row">
+      <div class="column-8 column-center" id="pizzas">
+        <h1>BeerJS Santiago</h1>
+        <h2>Calculadora de Pizzas / Asistentes</h2>
+        <hr>
+        <p>Para <input type="number" min="5" max="50" maxlength="2" v-select="asistentes" number> personas necesitarás <span class="pizzas">{{asistentes}}</span> pizzas familiares.</p>
+    </div><!-- /.row -->
+  </main><!-- .container -->
+
+  <script src="https://cdn.jsdelivr.net/vue/1.0.26/vue.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="assets/js/fx.js"></script>
+  <script>
+
+  // howmanypizza.js
+  var howManyPizza = function(people, slicesPerPerson, pizzaSlices) {
+    var slicesPerPerson = slicesPerPerson || 3;
+    var pizzaSlices = pizzaSlices || 8;
+    return Math.round( people * (slicesPerPerson/pizzaSlices) );
+  };
+
+  Vue.directive('select', {
+    twoWay: true,
+    priority: 1000,
+    bind: function () {
+      var self = this
+      $(this.el).on('keyup mouseup', function () {
+        self.set( howManyPizza(this.value) );
+      });
+    }
+  });
+
+  var vm = new Vue({
+    el: '#pizzas'
+  });
+
+  </script>
+</body>
+</html>
