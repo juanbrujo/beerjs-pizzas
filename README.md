@@ -1,7 +1,7 @@
-# Calculadora de Pizzas / Asistentes
+# Calculadora de Pizzas / Asistentes a BeerJS
 
 **BeerJS Santiago**
 
 ![BeerJS Pizza Calculator](https://i.imgur.com/bIwfdfC.png)
 
-[Demo](https://beerjs-pizzas-hqtsbwrzoa.now.sh/)
+[Demo](https://pizzas.beerjs.cl)

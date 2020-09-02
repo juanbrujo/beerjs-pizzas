@@ -1,27 +1,27 @@
 
-var MAX_LIFE = 50;
-var canvas = document.querySelector('canvas');
-var input = document.querySelector('input');
+var MAX_LIFE = 50
+var canvas = document.querySelector('canvas')
+var input = document.querySelector('input')
 var field = {}
-var hasFocus = false;
-var caret = document.createElement('span');
-caret.style.cssText = document.defaultView.getComputedStyle(input, '').cssText;
-caret.style.position = 'absolute';
-caret.style.left = 0;
-caret.style.top = 0;
-caret.style.width = 'auto';
-caret.style.visibility = 'hidden';
-document.body.appendChild(caret);
+var hasFocus = false
+var caret = document.createElement('span')
+caret.style.cssText = document.defaultView.getComputedStyle(input, '').cssText
+caret.style.position = 'absolute'
+caret.style.left = 0
+caret.style.top = 0
+caret.style.width = 'auto'
+caret.style.visibility = 'hidden'
+document.body.appendChild(caret)
 
 function reposition() {
-  field = input.getBoundingClientRect();
+  field = input.getBoundingClientRect()
 }
-window.onload = reposition;
-window.onresize = reposition;
-reposition();
+window.onload = reposition
+window.onresize = reposition
+reposition()
 
-input.onfocus = function() {hasFocus = true}
-input.onblur = function() {hasFocus = false}
+input.onfocus = function () {hasFocus = true}
+input.onblur = function () {hasFocus = false}
 
 function burst(intensity) {
 
@@ -30,55 +30,57 @@ function burst(intensity) {
     this.behavior.move()
   ];
 
-  var size = .75;``
-  var force = .7;
-  var lifeMin = 0;
-  var progress = Math.min(field.width,caret.offsetWidth) / field.width;
-  var offset = field.left + (field.width * progress);
-  var rangeMin = Math.max(field.left, offset - 30);
-  var rangeMax = Math.min(field.right, offset + 10);
+  var size = .75
+  var force = .7
+  var lifeMin = 0
+  var progress = Math.min(field.width,caret.offsetWidth) / field.width
+  var offset = field.left + (field.width * progress)
+  var rangeMin = Math.max(field.left, offset - 30)
+  var rangeMax = Math.min(field.right, offset + 10)
 
 
-  this.spray(intensity,function(){ return [
-    null,null,
+  this.spray(intensity,function () { return [
+    null, null, 
     Vector.create(
       Random.between(rangeMin + 10, rangeMax - 20),
       Random.between(field.top + 15, field.bottom - 15)
     ),
     Vector.random(force),
     size + Math.random(),
-    Random.between(lifeMin,0),behavior
-  ]});
+    Random.between(lifeMin, 0),
+    behavior
+  ]})
 
   // top edge
-  this.spray(intensity * .5,function(){ return [
-    null,null,
+  this.spray(intensity * .5,function () { return [
+    null, null, 
     Vector.create(
       Random.between(rangeMin, rangeMax),
       field.top
     ),
     Vector.random(force),
     size + Math.random(),
-    Random.between(lifeMin,0),behavior
-  ]});
+    Random.between(lifeMin, 0),
+    behavior
+  ]})
 
   // bottom edge
-  this.spray(intensity * .5,function(){ return [
-    null,null,
+  this.spray(intensity * .5,function () { return [
+    null, null, 
     Vector.create(
       Random.between(rangeMin, rangeMax),
       field.top + field.height
     ),
     Vector.random(force),
     size + Math.random(),
-    Random.between(lifeMin,0)
-    ,behavior
-  ]});
+    Random.between(lifeMin,0),
+    behavior
+  ]})
 
   // left edge
   if (input.value.length === 1) {
 
-    this.spray(intensity * 2,function(){ return [
+    this.spray(intensity * 2,function () { return [
       null,null,
       Vector.create(
         field.left,
@@ -93,347 +95,320 @@ function burst(intensity) {
   // right edge
   if (rangeMax == field.right) {
 
-    this.spray(intensity * 2,function(){ return [
-      null,null,
+    this.spray(intensity * 2,function () { return [
+      null, null, 
       Vector.create(
         field.right,
         Random.between(field.top,field.bottom)
       ),
       Vector.random(force),
       size + Math.random(),
-      Random.between(lifeMin,0),behavior
-    ]});
-
+      Random.between(lifeMin,0),
+      behavior
+    ]})
   }
-
 }
 
-
-
 // start particle simulation
-simulate(
-    '2d', {
-        init: function() {
-
-        },
-        tick: function(particles) {
-
-          if (!particles){ return; }
-
-          particles.forEach(function(p){
-
-            if (p.life > MAX_LIFE) {
-              this.destroy(p);
-            }
-
-          });
-
-        },
-        beforePaint: function() {
-            this.clear();
-        },
-        paint: function(particle) {
-
-          var p = particle.position;
-          var s = particle.size;
-          var o = 1- (particle.life / MAX_LIFE);
-
-          this.paint.circle(p.x, p.y, s, 'rgba(255,255,255,' + o +')');
-          this.paint.circle(p.x, p.y, s + 2, 'rgba(231,244,255,' + (o * .25) + ')');
-
-        },
-        afterPaint: function() {
-            // nothing
-        },
-        action: function(x, y) {
-
-          caret.textContent = input.value;
-
-          burst.call(this,10);
-
-          input.classList.add('keyup');
-          setTimeout(function(){input.classList.remove('keyup')},100);
-
+simulate('2d', {
+    init: function () {},
+    tick: function (particles) {
+        if (!particles){ return }
+        particles.forEach(function (p){
+        if (p.life > MAX_LIFE) {
+            this.destroy(p);
         }
+        })
+    },
+    beforePaint: function () {
+        this.clear()
+    },
+    paint: function (particle) {
+        var p = particle.position
+        var s = particle.size
+        var o = 1- (particle.life / MAX_LIFE)
+        this.paint.circle(p.x, p.y, s, 'rgba(255,255,255,' + o +')')
+        this.paint.circle(p.x, p.y, s + 2, 'rgba(231,244,255,' + (o * .25) + ')')
+    },
+    afterPaint: function () {},
+    action: function (x, y) {
+        caret.textContent = input.value
+        burst.call(this, 10)
+        input.classList.add('keyup')
+        setTimeout(function () {input.classList.remove('keyup')}, 100)
     }
-);
-
-
+})
 
 // "simulate" particle simulation logic
 /**
  * Constants
  */
-PI_2 = Math.PI / 2;
-PI_180 = Math.PI / 180;
+PI_2 = Math.PI / 2
+PI_180 = Math.PI / 180
 
 /**
  * Random
  */
 var Random = {
-    between: function(min, max) {
-        return min + (Math.random() * (max - min));
-    }
+  between: function (min, max) {
+    return min + (Math.random() * (max - min))
+  }
 }
 
 /**
  * 2D Vector Class
  */
-function Vector(x, y) {
-    this._x = x || 0;
-    this._y = y || 0;
+function Vector (x, y) {
+  this._x = x || 0
+  this._y = y || 0
 }
 
-Vector.create = function(x, y) {
-    return new Vector(x, y);
-};
+Vector.create = function (x, y) {
+  return new Vector(x, y)
+}
 
-Vector.add = function(a, b) {
-    return new Vector(a.x + b.x, a.y + b.y);
-};
+Vector.add = function (a, b) {
+  return new Vector(a.x + b.x, a.y + b.y)
+}
 
-Vector.subtract = function(a, b) {
-    return new Vector(a.x - b.x, a.y - b.y);
-};
+Vector.subtract = function (a, b) {
+  return new Vector(a.x - b.x, a.y - b.y)
+}
 
-Vector.random = function(range) {
-    var v = new Vector();
-    v.randomize(range);
-    return v;
-};
+Vector.random = function (range) {
+  var v = new Vector()
+  v.randomize(range)
+  return v
+}
 
-Vector.distanceSquared = function(a, b) {
-    var dx = a.x - b.x;
-    var dy = a.y - b.y;
-    return dx * dx + dy * dy;
-};
+Vector.distanceSquared = function (a, b) {
+    var dx = a.x - b.x
+    var dy = a.y - b.y
+    return dx * dx + dy * dy
+}
 
-Vector.distance = function(a, b) {
-    var dx = a.x - b.x;
-    var dy = a.y - b.y;
-    return Math.sqrt(dx * dx + dy * dy);
-};
+Vector.distance = function (a, b) {
+    var dx = a.x - b.x
+    var dy = a.y - b.y
+    return Math.sqrt(dx * dx + dy * dy)
+}
 
 Vector.prototype = {
     get x() {
-        return this._x;
+        return this._x
     },
     get y() {
-        return this._y;
+        return this._y
     },
     set x(value) {
-        this._x = value;
+        this._x = value
     },
     set y(value) {
-        this._y = value;
+        this._y = value
     },
     get magnitudeSquared() {
-        return this._x * this._x + this._y * this._y;
+        return this._x * this._x + this._y * this._y
     },
     get magnitude() {
-        return Math.sqrt(this.magnitudeSquared);
+        return Math.sqrt(this.magnitudeSquared)
     },
     get angle() {
-        return Math.atan2(this._y, this._x) * 180 / Math.PI;
+        return Math.atan2(this._y, this._x) * 180 / Math.PI
     },
-    clone: function() {
-        return new Vector(this._x, this._y);
+    clone: function () {
+        return new Vector(this._x, this._y)
     },
-    add: function(v) {
-        this._x += v.x;
-        this._y += v.y;
+    add: function (v) {
+        this._x += v.x
+        this._y += v.y
     },
-    subtract: function(v) {
-        this._x -= v.x;
-        this._y -= v.y;
+    subtract: function (v) {
+        this._x -= v.x
+        this._y -= v.y
     },
-    multiply: function(value) {
-        this._x *= value;
-        this._y *= value;
+    multiply: function (value) {
+        this._x *= value
+        this._y *= value
     },
-    divide: function(value) {
-        this._x /= value;
-        this._y /= value;
+    divide: function (value) {
+        this._x /= value
+        this._y /= value
     },
-    normalize: function() {
-        var magnitude = this.magnitude;
+    normalize: function () {
+        var magnitude = this.magnitude
         if (magnitude > 0) {
-            this.divide(magnitude);
+            this.divide(magnitude)
         }
     },
-    limit: function(treshold) {
+    limit: function (treshold) {
         if (this.magnitude > treshold) {
-            this.normalize();
-            this.multiply(treshold);
+            this.normalize()
+            this.multiply(treshold)
         }
     },
-    randomize: function(amount) {
-        amount = amount || 1;
-        this._x = amount * 2 * (-.5 + Math.random());
-        this._y = amount * 2 * (-.5 + Math.random());
+    randomize: function (amount) {
+        amount = amount || 1
+        this._x = amount * 2 * (-.5 + Math.random())
+        this._y = amount * 2 * (-.5 + Math.random())
     },
-    rotate: function(degrees) {
-        var magnitude = this.magnitude;
-        var angle = ((Math.atan2(this._x, this._y) * PI_HALF) + degrees) * PI_180;
-        this._x = magnitude * Math.cos(angle);
-        this._y = magnitude * Math.sin(angle);
+    rotate: function (degrees) {
+        var magnitude = this.magnitude
+        var angle = ((Math.atan2(this._x, this._y) * PI_HALF) + degrees) * PI_180
+        this._x = magnitude * Math.cos(angle)
+        this._y = magnitude * Math.sin(angle)
     },
-    flip: function() {
-        var temp = this._y;
-        this._y = this._x;
-        this._x = temp;
+    flip: function () {
+        var temp = this._y
+        this._y = this._x
+        this._x = temp
     },
-    invert: function() {
-        this._x = -this._x;
-        this._y = -this._y;
+    invert: function () {
+        this._x = -this._x
+        this._y = -this._y
     },
-    toString: function() {
-        return this._x + ', ' + this._y;
+    toString: function () {
+        return this._x + ', ' + this._y
     }
 }
 
 /**
  * Particle Class
  */
-function Particle(id, group, position, velocity, size, life, behavior) {
-
-    this._id = id || 'default';
-    this._group = group || 'default';
-
-    this._position = position || new Vector();
-    this._velocity = velocity || new Vector();
-    this._size = size || 1;
-    this._life = Math.round(life || 0);
-
-    this._behavior = behavior || [];
-
+function Particle (id, group, position, velocity, size, life, behavior) {
+    this._id = id || 'default'
+    this._group = group || 'default'
+    this._position = position || new Vector()
+    this._velocity = velocity || new Vector()
+    this._size = size || 1
+    this._life = Math.round(life || 0)
+    this._behavior = behavior || []
 }
 
 Particle.prototype = {
     get id() {
-        return this._id;
+        return this._id
     },
     get group() {
-        return this._group;
+        return this._group
     },
     get life() {
-        return this._life;
+        return this._life
     },
     get size() {
-        return this._size;
+        return this._size
     },
     set size(size) {
-        this._size = size;
+        this._size = size
     },
     get position() {
-        return this._position;
+        return this._position
     },
     get velocity() {
-        return this._velocity;
+        return this._velocity
     },
-    update: function(stage) {
+    update: function (stage) {
 
-        this._life++;
+        this._life++
 
-        var i = 0;
-        var l = this._behavior.length;
+        var i = 0
+        var l = this._behavior.length
 
         for (; i < l; i++) {
-            this._behavior[i].call(stage, this);
+            this._behavior[i].call(stage, this)
         }
 
     },
     toString: function() {
-        return 'Particle(' + this._id + ') ' + this._life + ' pos: ' + this._position + ' vec: ' + this._velocity;
+        return 'Particle(' + this._id + ') ' + this._life + ' pos: ' + this._position + ' vec: ' + this._velocity
     }
 }
 
 // setup DOM
-function simulate(dimensions, options) {
+function simulate (dimensions, options) {
 
     // private vars
-    var particles = [];
-    var destroyed = [];
-    var update = update || function() {};
-    var stage = stage || function() {};
-    var canvas;
-    var context;
+    var particles = []
+    var destroyed = []
+    var update = update || function () {}
+    var stage = stage || function () {}
+    var canvas
+    var context
 
     if (!options) {
-        console.error('"options" object must be defined');
-        return;
+        console.error('"options" object must be defined')
+        return
     }
 
     if (!options.init) {
-        console.error('"init" function must be defined');
-        return;
+        console.error('"init" function must be defined')
+        return
     }
 
     if (!options.paint) {
-        console.error('"paint" function must be defined');
-        return;
+        console.error('"paint" function must be defined')
+        return
     }
 
     if (!options.tick) {
-        options.tick = function() {};
+        options.tick = function () {}
     }
 
     if (!options.beforePaint) {
-        options.beforePaint = function() {};
+        options.beforePaint = function () {}
     }
 
     if (!options.afterPaint) {
-        options.afterPaint = function() {};
+        options.afterPaint = function () {}
     }
 
     if (!options.action) {
-        options.action = function() {};
+        options.action = function () {}
     }
 
     if (document.readyState === 'interactive') {
-        setup();
+        setup()
     } else {
-        document.addEventListener('DOMContentLoaded', setup);
+        document.addEventListener('DOMContentLoaded', setup)
     }
 
     // resizes canvas to fit window dimensions
-    function fitCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    function fitCanvas () {
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
     }
 
     // create canvas for drawing
-    function setup() {
+    function setup () {
 
         // create
-        canvas = document.createElement('canvas');
-        document.body.appendChild(canvas);
+        canvas = document.createElement('canvas')
+        document.body.appendChild(canvas)
 
         // correct canvas size on window resize
-        window.addEventListener('resize', fitCanvas);
+        window.addEventListener('resize', fitCanvas)
 
         // go
-        go();
+        go()
     }
 
     // canvas has been attached, let's go!
-    function go() {
+    function go () {
 
         // set initial canvas size
-        fitCanvas();
+        fitCanvas()
 
         // get context for drawing
-        context = canvas.getContext(dimensions);
+        context = canvas.getContext(dimensions)
 
         // simulation update loop
-        function act() {
+        function act () {
 
             // update particle states
-            var i = 0;
-            var l = particles.length;
-            var p;
+            var i = 0
+            var l = particles.length
+            var p
             for (; i < l; i++) {
-                particles[i].update(this);
+                particles[i].update(this)
             }
 
             // clean destroyed particles
@@ -443,39 +418,39 @@ function simulate(dimensions, options) {
 
                     // has not been found in destroyed array?
                     if (p !== particles[i]) {
-                        continue;
+                        continue
                     }
 
                     // remove particle
-                    particles.splice(i, 1);
+                    particles.splice(i, 1)
 
                 } while (i-- >= 0)
             }
 
             // repaint context
-            options.beforePaint.call(this);
+            options.beforePaint.call(this)
 
             // repaint particles
-            i = 0;
-            l = particles.length;
+            i = 0
+            l = particles.length
             for (; i < l; i++) {
-                options.paint.call(this, particles[i]);
+                options.paint.call(this, particles[i])
             }
 
             // after particles have been painted
-            options.afterPaint.call(this);
+            options.afterPaint.call(this)
         }
 
-        function tick() {
+        function tick () {
 
             // call update method, this allows for inserting particles later on
-            options.tick.call(this, particles);
+            options.tick.call(this, particles)
 
             // update particles here
-            act();
+            act()
 
             // on to the next frame
-            window.requestAnimationFrame(tick);
+            window.requestAnimationFrame(tick)
 
         }
 
@@ -483,21 +458,21 @@ function simulate(dimensions, options) {
          * API
          **/
         function clear() {
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.clearRect(0, 0, canvas.width, canvas.height)
         }
 
         function destroy(particle) {
-            destroyed.push(particle);
+            destroyed.push(particle)
         }
 
         function add(id, group, position, velocity, size, life, behavior) {
-            particles.push(new Particle(id, group, position, velocity, size, life, behavior));
+            particles.push(new Particle(id, group, position, velocity, size, life, behavior))
         }
 
         function spray(amount, config) {
             var i = 0;
             for (; i < amount; i++) {
-                add.apply(this, config());
+                add.apply(this, config())
             }
         }
 
@@ -508,321 +483,316 @@ function simulate(dimensions, options) {
                 particle.size,
                 'rgba(255,0,0,.75)'
             );
-            context.beginPath();
-            context.moveTo(particle.position.x, particle.position.y);
-            context.lineTo(particle.position.x + (particle.velocity.x * 10), particle.position.y + (particle.velocity.y * 10));
-            context.strokeStyle = 'rgba(255,0,0,.1)';
-            context.stroke();
-            context.closePath();
+            context.beginPath()
+            context.moveTo(particle.position.x, particle.position.y)
+            context.lineTo(particle.position.x + (particle.velocity.x * 10), particle.position.y + (particle.velocity.y * 10))
+            context.strokeStyle = 'rgba(255,0,0,.1)'
+            context.stroke()
+            context.closePath()
         };
 
-        this.clear = clear;
-        this.destroy = destroy;
-        this.add = add;
-        this.spray = spray;
-        this.debug = debug;
+        this.clear = clear
+        this.destroy = destroy
+        this.add = add
+        this.spray = spray
+        this.debug = debug
 
         this.paint = {
-            circle: function(x, y, size, color) {
-                context.beginPath();
-                context.arc(x, y, size, 0, 2 * Math.PI, false);
-                context.fillStyle = color;
-                context.fill();
+            circle: function (x, y, size, color) {
+                context.beginPath()
+                context.arc(x, y, size, 0, 2 * Math.PI, false)
+                context.fillStyle = color
+                context.fill()
             },
-            square: function(x, y, size, color) {
-                context.beginPath();
-                context.rect(x - (size * .5), y - (size * .5), size, size);
-                context.fillStyle = color;
-                context.fill();
+            square: function (x, y, size, color) {
+                context.beginPath()
+                context.rect(x - (size * .5), y - (size * .5), size, size)
+                context.fillStyle = color
+                context.fill()
             }
         }
 
         this.behavior = {
-            cohesion: function(range, speed) {
-                range = Math.pow(range || 100, 2);
-                speed = speed || .001;
-                return function(particle) {
+            cohesion: function (range, speed) {
+                range = Math.pow(range || 100, 2)
+                speed = speed || .001
+                return function (particle) {
 
-                    var center = new Vector();
-                    var i = 0;
-                    var l = particles.length;
-                    var count = 0;
+                    var center = new Vector()
+                    var i = 0
+                    var l = particles.length
+                    var count = 0
 
                     if (l <= 1) {
-                        return;
+                        return
                     }
 
                     for (; i < l; i++) {
 
                         // don't use self in group
                         if (particles[i] === particle || Vector.distanceSquared(particles[i].position, particle.position) > range) {
-                            continue;
+                            continue
                         }
 
-                        center.add(Vector.subtract(particles[i].position, particle.position));
-                        count++;
+                        center.add(Vector.subtract(particles[i].position, particle.position))
+                        count++
                     }
 
                     if (count > 0) {
-
-                        center.divide(count);
-
-                        center.normalize();
-                        center.multiply(particle.velocity.magnitude);
-
-                        center.multiply(.05);
+                        center.divide(count)
+                        center.normalize()
+                        center.multiply(particle.velocity.magnitude)
+                        center.multiply(.05)
                     }
 
-                    particle.velocity.add(center);
+                    particle.velocity.add(center)
 
                 }
             },
-            separation: function(distance) {
+            separation: function (distance) {
 
-                var distance = Math.pow(distance || 25, 2);
+                var distance = Math.pow(distance || 25, 2)
 
-                return function(particle) {
+                return function (particle) {
 
-                    var heading = new Vector();
-                    var i = 0;
-                    var l = particles.length;
-                    var count = 0;
-                    var diff;
+                    var heading = new Vector()
+                    var i = 0
+                    var l = particles.length
+                    var count = 0
+                    var diff
 
                     if (l <= 1) {
-                        return;
+                        return
                     }
 
                     for (; i < l; i++) {
 
                         // don't use self in group
                         if (particles[i] === particle || Vector.distanceSquared(particles[i].position, particle.position) > distance) {
-                            continue;
+                            continue
                         }
 
                         // stay away from neighbours
-                        diff = Vector.subtract(particle.position, particles[i].position);
-                        diff.normalize();
+                        diff = Vector.subtract(particle.position, particles[i].position)
+                        diff.normalize()
 
-                        heading.add(diff);
-                        count++;
+                        heading.add(diff)
+                        count++
                     }
 
                     if (count > 0) {
 
                         // get average
-                        heading.divide(count);
+                        heading.divide(count)
 
                         // make same length as current velocity (so particle won't speed up)
-                        heading.normalize();
-                        heading.multiply(particle.velocity.magnitude);
+                        heading.normalize()
+                        heading.multiply(particle.velocity.magnitude)
 
                         // limit force to make particle movement smoother
-                        heading.limit(.1);
+                        heading.limit(.1)
                     }
 
-                    particle.velocity.add(heading);
+                    particle.velocity.add(heading)
 
                 }
             },
-            alignment: function(range) {
-                range = Math.pow(range || 100, 2);
-                return function(particle) {
+            alignment: function (range) {
+                range = Math.pow(range || 100, 2)
+                return function (particle) {
 
-                    var i = 0;
-                    var l = particles.length;
-                    var count = 0;
-                    var heading = new Vector();
+                    var i = 0
+                    var l = particles.length
+                    var count = 0
+                    var heading = new Vector()
 
                     if (l <= 1) {
-                        return;
+                        return
                     }
 
                     for (; i < l; i++) {
 
                         // don't use self in group also don't align when out of range
                         if (particles[i] === particle || Vector.distanceSquared(particles[i].position, particle.position) > range) {
-                            continue;
+                            continue
                         }
 
-                        heading.add(particles[i].velocity);
-                        count++;
+                        heading.add(particles[i].velocity)
+                        count++
                     }
 
                     if (count > 0) {
 
-                        heading.divide(count);
-                        heading.normalize();
-                        heading.multiply(particle.velocity.magnitude);
+                        heading.divide(count)
+                        heading.normalize()
+                        heading.multiply(particle.velocity.magnitude)
 
                         // limit
-                        heading.multiply(.1);
+                        heading.multiply(.1)
 
                     }
 
-                    particle.velocity.add(heading);
+                    particle.velocity.add(heading)
 
                 }
             },
-            move: function() {
-                return function(particle) {
-                    particle.position.add(particle.velocity);
+            move: function () {
+                return function (particle) {
+                    particle.position.add(particle.velocity)
 
                     // handle collisions?
 
                 }
             },
-            eat: function(food) {
+            eat: function (food) {
                 food = food || [];
-                return function(particle) {
+                return function (particle) {
 
-                    var i = 0;
-                    var l = particles.length;
-                    var prey;
+                    var i = 0
+                    var l = particles.length
+                    var prey
 
                     for (; i < l; i++) {
 
-                        prey = particles[i];
+                        prey = particles[i]
 
                         // can't eat itself, also, needs to be tasty
                         if (prey === particle || food.indexOf(prey.group) === -1) {
-                            continue;
+                            continue
                         }
 
                         // calculate force vector
                         if (Vector.distanceSquared(particle.position, neighbour.position) < 2 && particle.size >= neighbour.size) {
-                            particle.size += neighbour.size;
-                            destroy(neighbour);
+                            particle.size += neighbour.size
+                            destroy(neighbour)
                         }
 
                     }
                 }
             },
-            force: function(x, y) {
-                return function(particle) {
-                    particle.velocity.x += x;
-                    particle.velocity.y += y;
+            force: function (x, y) {
+                return function (particle) {
+                    particle.velocity.x += x
+                    particle.velocity.y += y
                 }
             },
-            limit: function(treshold) {
-                return function(particle) {
-                    particle.velocity.limit(treshold);
+            limit: function (treshold) {
+                return function (particle) {
+                    particle.velocity.limit(treshold)
                 }
             },
-            attract: function(forceMultiplier, groups) {
-                forceMultiplier = forceMultiplier || 1;
-                groups = groups || [];
-                return function(particle) {
+            attract: function (forceMultiplier, groups) {
+                forceMultiplier = forceMultiplier || 1
+                groups = groups || []
+                return function (particle) {
 
                     // attract other particles
-                    var totalForce = new Vector(0, 0);
-                    var force = new Vector(0, 0);
-                    var i = 0;
-                    var l = particles.length;
-                    var distance;
-                    var pull;
-                    var attractor;
-                    var grouping = groups.length;
+                    var totalForce = new Vector(0, 0)
+                    var force = new Vector(0, 0)
+                    var i = 0
+                    var l = particles.length
+                    var distance
+                    var pull
+                    var attractor
+                    var grouping = groups.length
 
                     for (; i < l; i++) {
 
-                        attractor = particles[i];
+                        attractor = particles[i]
 
                         // can't be attracted by itself or mismatched groups
                         if (attractor === particle || (grouping && groups.indexOf(attractor.group) === -1)) {
-                            continue;
+                            continue
                         }
 
                         // calculate force vector
-                        force.x = attractor.position.x - particle.position.x;
-                        force.y = attractor.position.y - particle.position.y;
-                        distance = force.magnitude;
-                        force.normalize();
+                        force.x = attractor.position.x - particle.position.x
+                        force.y = attractor.position.y - particle.position.y
+                        distance = force.magnitude
+                        force.normalize()
 
                         // the bigger the attractor the more force
-                        force.multiply(attractor.size / distance);
+                        force.multiply(attractor.size / distance)
 
-                        totalForce.add(force);
+                        totalForce.add(force)
                     }
 
-                    totalForce.multiply(forceMultiplier);
+                    totalForce.multiply(forceMultiplier)
 
-                    particle.velocity.add(totalForce);
+                    particle.velocity.add(totalForce)
                 }
             },
-            wrap: function(margin) {
-                return function(particle) {
+            wrap: function (margin) {
+                return function (particle) {
 
                     // move around when particle reaches edge of screen
                     var position = particle.position;
-                    var radius = particle.size * .5;
+                    var radius = particle.size * .5
 
                     if (position.x + radius > canvas.width + margin) {
-                        position.x = radius;
+                        position.x = radius
                     }
 
                     if (position.y + radius > canvas.height + margin) {
-                        position.y = radius;
+                        position.y = radius
                     }
 
                     if (position.x - radius < -margin) {
-                        position.x = canvas.width - radius;
+                        position.x = canvas.width - radius
                     }
 
                     if (position.y - radius < -margin) {
-                        position.y = canvas.height - radius;
+                        position.y = canvas.height - radius
                     }
 
                 }
             },
-            reflect: function() {
-
-                return function(particle) {
+            reflect: function () {
+                return function (particle) {
 
                     // bounce from edges
-                    var position = particle.position;
-                    var velocity = particle.velocity;
-                    var radius = particle.size * .5;
+                    var position = particle.position
+                    var velocity = particle.velocity
+                    var radius = particle.size * .5
 
                     if (position.x + radius > canvas.width) {
-                        velocity.x = -velocity.x;
+                        velocity.x = -velocity.x
                     }
 
                     if (position.y + radius > canvas.height) {
-                        velocity.y = -velocity.y;
+                        velocity.y = -velocity.y
                     }
 
                     if (position.x - radius < 0) {
-                        velocity.x = -velocity.x;
+                        velocity.x = -velocity.x
                     }
 
                     if (position.y - radius < 0) {
-                        velocity.y = -velocity.y;
+                        velocity.y = -velocity.y
                     }
                 }
-
             },
             edge: function(action) {
                 return function(particle) {
 
-                    var position = particle.position;
-                    var velocity = particle.velocity;
-                    var radius = particle.size * .5;
+                    var position = particle.position
+                    var velocity = particle.velocity
+                    var radius = particle.size * .5
 
                     if (position.x + radius > canvas.width) {
-                        action(particle);
+                        action(particle)
                     }
 
                     if (position.y + radius > canvas.height) {
-                        action(particle);
+                        action(particle)
                     }
 
                     if (position.x - radius < 0) {
-                        action(particle);
+                        action(particle)
                     }
 
                     if (position.y - radius < 0) {
-                        action(particle);
+                        action(particle)
                     }
                 }
             }
@@ -831,39 +801,37 @@ function simulate(dimensions, options) {
         // public
         Object.defineProperties(this, {
             'particles': {
-                get: function() {
-                    return particles;
+                get: function () {
+                    return particles
                 }
             },
             'width': {
-                get: function() {
-                    return canvas.width;
+                get: function () {
+                    return canvas.width
                 }
             },
             'height': {
-                get: function() {
-                    return canvas.height;
+                get: function () {
+                    return canvas.height
                 }
             },
             'context': {
-                get: function() {
-                    return context;
+                get: function () {
+                    return context
                 }
             }
-        });
+        })
 
         // call init method so the scene can be setup
         options.init.call(this)
 
         // start ticking
-        tick();
+        tick()
 
         // start listening to events
-        var self = this;
+        var self = this
         document.addEventListener('keyup', function(e) {
-            options.action.call(self, e.pageX, e.pageY);
-        });
-
+            options.action.call(self, e.pageX, e.pageY)
+        })
     }
-
-};
+}

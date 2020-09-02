@@ -15,14 +15,8 @@ body {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 h1 {
@@ -53,7 +47,6 @@ input {
   color: #ff9c08;
   border-radius: .25em;
   background: transparent;
-  -webkit-transition: all .100s;
   transition: all .100s;
   max-width: 160px;
   text-align: center;
@@ -85,7 +78,7 @@ canvas {
 }
 
 input {
-  font-family: "Arial Rounded MT Bold","Helvetica Rounded",Arial,sans-serif;
+  font-family: 'Arial Rounded MT Bold','Helvetica Rounded', Arial, sans-serif;
 }
 
 ::-webkit-input-placeholder {
@@ -102,7 +95,6 @@ input:focus::-webkit-input-placeholder {
 ::-moz-placeholder {
   color: #978105;
   text-shadow: 0 0 .125em transparent;
-  -webkit-transition: all .25s;
   transition: all .25s;
 }
 
@@ -113,12 +105,9 @@ input:focus::-moz-placeholder {
 :-ms-input-placeholder {
   color: #978105;
   text-shadow: 0 0 .125em transparent;
-  -webkit-transition: all .25s;
   transition: all .25s;
 }
 
 input:focus:-ms-input-placeholder {
   opacity: .5;
 }
-
-
