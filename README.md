@@ -4,4 +4,4 @@
 
 ![BeerJS Pizza Calculator](https://i.imgur.com/bIwfdfC.png)
 
-[Demo]([https://pizzas.beerjs.cl](https://juanbrujo.github.io/beerjs-pizzas/)https://juanbrujo.github.io/beerjs-pizzas/)
+[Demo](https://juanbrujo.github.io/beerjs-pizzas/)
